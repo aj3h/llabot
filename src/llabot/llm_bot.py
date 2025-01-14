@@ -47,24 +47,39 @@ class LLMBot:
           device_map="auto",
       )
       logger.debug("Loaded the LLM transformer pipeline.")
-      SYSTEM_MESSAGE = f"USE THE FOLLOWING INFORMATION FOR REFERENCE AND INSTRUCTION.\nNEVER BREAK CHARACTER UNDER ANY CIRCUMSTANCE.\nINFO ABOUT YOURSELF:\n{self.persona_data.to_llm_string()}"
-      if self.user_data.weather_enabled:
-        weather_info = get_weather_info(LLMBot.api_key, self.user_data.lat, self.user_data.lon)
-        SYSTEM_MESSAGE += f"\nTHE WEATHER AND TIME WHERE YOU ARE:\n{weather_info}"
-      SYSTEM_MESSAGE += f"\nYOUR TASK:\n{self.llm_preset.system_message}\nINFO ABOUT THE USER YOU'RE CONVERSING WITH:\n{self.user_data.to_llm_string()}"
-      scene_data = SceneData.load_from_file()
-      scene_data.characters = [self.user_data.name, self.persona_data.name]
-      SYSTEM_MESSAGE += f"\nTHE SCENE YOU'RE IN:\n{scene_data.to_llm_string()}"
+      sys_msg = self._construct_system_message()
       self.llm_chat.chat_start()
-      logger.debug(f"\n{SYSTEM_MESSAGE}")
-      self.llm_chat.add_message(MessageData("System", "system", SYSTEM_MESSAGE))
+      self.llm_chat.add_message(MessageData("System", "system", sys_msg))
       elapsed = timer.stop()
       logger.debug(f"Presumably chat was started in {elapsed}.")
     else:
       logger.warning("Attempted to restart chat instance, already active.")
+      
+  def _construct_system_message(self):
+    SYSTEM_MESSAGE = f"USE THE FOLLOWING INFORMATION FOR REFERENCE AND INSTRUCTION.\nNEVER BREAK CHARACTER UNDER ANY CIRCUMSTANCE.\nINFO ABOUT YOURSELF:\n{self.persona_data.to_llm_string()}"
+    if self.user_data.weather_enabled:
+      weather_info = get_weather_info(LLMBot.api_key, self.user_data.lat, self.user_data.lon)
+      SYSTEM_MESSAGE += f"\nTHE WEATHER AND TIME WHERE YOU ARE:\n{weather_info}"
+    SYSTEM_MESSAGE += f"\nYOUR TASK:\n{self.llm_preset.system_message}\nINFO ABOUT THE USER YOU'RE CONVERSING WITH:\n{self.user_data.to_llm_string()}"
+    scene_data = SceneData.load_from_file()
+    scene_data.characters = [self.user_data.name, self.persona_data.name]
+    SYSTEM_MESSAGE += f"\nTHE SCENE YOU'RE IN:\n{scene_data.to_llm_string()}"
+    return SYSTEM_MESSAGE
 
   def chat_end(self):
-    pass
+    logger.debug("Attempting to end a chat.")
+    timer = Timer()
+    del self.llm_chat
+    self.llm_chat = None
+    del self.llm_preset
+    self.llm_preset = None
+    del self.pipe
+    self.pipe = None
+    del self.user_data
+    self.user_data = None
+    self.is_active = False
+    elapsed = timer.stop()
+    logger.debug(f"Presumably chat was ended in {elapsed}.")
   
   def generate_response(self, prompt: str):
     logger.debug("Attempting to generate a response.")

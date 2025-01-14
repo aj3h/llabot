@@ -23,5 +23,14 @@ class LLaBot:
   def start_chat(self, bot_num: int, user_data: UserData, preset_name: str = "realism"):
     self.bot_pool[bot_num].chat_start(preset_name, user_data)
     
+  def end_chat(self, bot_num: int):
+    self.bot_pool[bot_num].chat_end()
+    
+  def remove_bot(self, bot_num: int):
+    bot = self.bot_pool.pop(bot_num)
+    if bot.is_active:
+      bot.chat_end()
+    del bot
+    
   def generate_response(self, bot_num: int, prompt: str) -> str:
     return self.bot_pool[bot_num].generate_response(prompt)
