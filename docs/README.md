@@ -8,8 +8,15 @@ This is a personal project, presented as-is, and is not intended for public use.
 - **Message Summarization**: Efficiently manage conversation context over time.
 - **Customizable Personas and Roleplay**: Tailor bot behavior with personas, scenes, and other roleplay elements.
 - **Weather Integration**: Get real-time weather updates with [OpenWeatherMap API](https://openweathermap.org/api).
-- **Chess Play**: Interact with the bot while it simulates human-like chess play.
-- **Planned Features**: Memory system for long-term context, additional integrations, and more!
+- **Chess Play**: Simulates human-like gameplay using a separate chess LLM.
+- **Planned Features**: Memory system for long-term context, code generation and completion, and more!
+
+## Known Issues
+The following are known issues and will likely be addressed as development continues:
+
+- **Conversation Overflow:** Although messages older than a certain point are summarized as the conversation progresses, there is currently no mechanism for eventually removing messages. If a conversation progresses long enough, it will probably eventually get *real weird*.
+- **Summarizer Inaccurate:** Sometimes the summarizer confuses things, leading to weird results. As a simple example, "I'm worried about the test. You know what I mean, John?" Will get summarized as, "John is worried about the test." Which leads to the bot believing *you're* worried about the test, instead of itself.
+- **Better Chess Integration:** Currently the chess module exists and is functional, but hasn't been integrated with the actual bot itself. As it stands, that would be handled on the frontend.
 
 ## Installation
 
