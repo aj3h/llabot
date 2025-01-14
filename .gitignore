@@ -171,3 +171,5 @@ cython_debug/
 .pypirc
 
 project.json
+src/llabot/chat_logs/
+log/

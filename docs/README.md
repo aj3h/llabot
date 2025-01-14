@@ -1,7 +1,7 @@
 # LLaBot
 
 ## DISCLAIMER
-This is a personal project, presented as-is, and is not intended for public use. It's very early in development, and there is no guarantee it will even function at the time of reading this. There are no plans to allow collaboration, feature requests, or other contributions.
+This is a **personal project**, presented as-is, and is **not** intended for **public use**. It's very early in development, and there is no guarantee it will even function at the time of reading this. There are no plans to allow collaboration, feature requests, or other contributions.
 
 ## Current Features
 **LLaBot** is a Python-based chatbot framework leveraging Hugging Face transformers and LLaMa models to create dynamic and customizable conversational experiences. It combines advanced features like roleplay, integrations, and contextual efficiency to deliver innovative AI interactions.
